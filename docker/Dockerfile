@@ -16,4 +16,19 @@ RUN apt-get install -y gcc g++ gperf bison flex texinfo help2man make libncurses
 RUN wget -O /sbin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64
 RUN chmod a+x /sbin/dumb-init
 RUN echo 'export PATH=/opt/ctng/bin:$PATH' >> /etc/profile
+
+WORKDIR	/root
+
+# Install dependencies.
+RUN	apt-get update && DEBIAN_FRONTEND=noninteractive\
+	apt-get install -y build-essential gperf bison flex texinfo wget gawk libtool automake libncurses5-dev help2man\
+		ca-certificates
+
+# Download and compile crosstool-NG.
+RUN	wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.25.0.tar.xz 2>&1 &&\
+	tar xf crosstool-ng-*.tar* &&\
+	cd crosstool-ng-1.25.0 &&\
+	./configure --prefix /usr/local && make && make install &&\
+	rm -rf ../crosstool-ng*
+
 ENTRYPOINT [ "/sbin/dumb-init", "--" ]
