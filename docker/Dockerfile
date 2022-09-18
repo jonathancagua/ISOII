@@ -41,7 +41,8 @@ RUN ct-ng clean
 ENV PATH="${PATH}:/toolchain/aarch64-unknown-linux-gnu/bin"
 
 USER root
-RUN apt-get autopoint \
+RUN apt-get update && apt-get install -y \
+    autopoint \
 	binutils-dev \
 	cppcheck \
 	curl \
